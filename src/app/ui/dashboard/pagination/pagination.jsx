@@ -18,7 +18,7 @@ import {
   } from "@radix-ui/react-icons"
   
 
-const PaginationComponent = ({count}) => {
+const PaginationComponent = ({count, perPage}) => {
 
     const searchParams = useSearchParams();
     const {replace} = useRouter();
@@ -28,7 +28,7 @@ const PaginationComponent = ({count}) => {
 
 
     const params = new  URLSearchParams(searchParams);
-    const ITEM_PER_PAGE = 8
+    const ITEM_PER_PAGE = perPage
     const totalPages = Math.ceil(count / ITEM_PER_PAGE);
 
     const hasPrev = ITEM_PER_PAGE * (parseInt(page)-1) > 0
@@ -45,6 +45,9 @@ const PaginationComponent = ({count}) => {
         params.set("page", pageNumber);
         replace(`${pathName}?${params}`);
     }
+
+    console.log(count)
+
 
   return (
     <div>

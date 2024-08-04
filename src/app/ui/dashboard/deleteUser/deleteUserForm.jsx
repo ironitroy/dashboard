@@ -52,7 +52,7 @@ const DeleteUserForm = ({ userId }) => {
       }}
     >
       <input type="hidden" name="id" value={userId} />
-      <Button className="w-full" >Confirm</Button>
+      <Button className="w-full" >Delete</Button>
       {/* <button className="">Continue</button> */}
     </form>
   );

@@ -10,6 +10,7 @@ const Search = () => {
     const searchParams = useSearchParams();
     const {replace} = useRouter();
     const pathName = usePathname();
+    console.log(pathName)
 
     const handleSearch = useDebouncedCallback((e) => {
         const params = new  URLSearchParams(searchParams);
@@ -38,7 +39,7 @@ const Search = () => {
       className="block w-full pl-10 py-2 pr-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
       placeholder="Search..."
     /> */}
-     <Input id="search" className="block w-40  pl-10 py-2 pr-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 "  placeholder="Search..." onChange={handleSearch}/>
+     <Input id="search" className="block w-48 lg:w-72  pl-10 py-2 pr-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 "  placeholder="Search..." onChange={handleSearch}/>
   </div>
   )
 }

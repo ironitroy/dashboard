@@ -23,6 +23,9 @@ import { IoWarningOutline } from "react-icons/io5";
 import { getCurrentTime } from "@/app/lib/utils";
 import { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { useFormStatus } from 'react-dom'
+import Spinner from "../spinner/spinner";
+
 
 const AddUserForm = () => {
   const { toast } = useToast();
@@ -58,6 +61,7 @@ const AddUserForm = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
+
   return (
     <div>
       <form
@@ -73,18 +77,18 @@ const AddUserForm = () => {
               title: (
                 <div className="flex gap-2 items-center">
                   <IoWarningOutline className="text-2xl" />
-                  Uh oh! Something went wrong.
+                 { result.err} 
                 </div>
               ),
-              description: result.err,
+              description:" Uh oh! Something went wrong.",
             });
-          } else {
+          } else if (result.success){
             toast({
               variant: "success2",
               title: (
                 <div className="flex gap-2 items-center">
                   <IoIosCheckmarkCircleOutline className="text-2xl" />
-                  Bingo! User successfully created!
+                  {result.success}
                 </div>
               ),
               description: getCurrentTime(),
@@ -106,11 +110,10 @@ const AddUserForm = () => {
                   className="col-span-3  "
                   placeholder="John Doe"
                   required
+                  // pattern="[A-Za-z\s]+"
                   // pattern="^[A-Z][a-zA-Z]*(\s[A-Z][a-zA-Z]*)*$"
                   onChange={(e) => {
-                    e.target.value = e.target.value.replace(/\b\w/g, (c) =>
-                      c.toUpperCase()
-                    );
+                    e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '').replace(/\b\w/g, c => c.toUpperCase());
                   }}
                 />
                 
@@ -274,13 +277,14 @@ const AddUserForm = () => {
               </div>
             </div>
           </div>
-          <Button
+          {/* <Button
             type="submit"
             className="mt-4 "
             disabled={!passwordMatch || !password || !confirmPassword}
           >
-            Create
-          </Button>
+              {pending ? <span className="sr-only">Loading...</span> : "Create"}
+          </Button> */}
+          <SubmitButton passwordMatch={passwordMatch} password={password} confirmPassword={confirmPassword}/>
         </div>
       </form>
     </div>
@@ -288,3 +292,24 @@ const AddUserForm = () => {
 };
 
 export default AddUserForm;
+
+
+function SubmitButton({passwordMatch, password, confirmPassword}) {
+  const { pending } = useFormStatus()
+
+  return (
+    // <button
+    //   disabled={pending}
+    //   className='rounded-lg bg-black py-2 text-white disabled:cursor-not-allowed disabled:opacity-50'
+    // >
+      
+    // </button>
+     <Button
+     type="submit"
+     className="mt-4 "
+     disabled={!passwordMatch || !password || !confirmPassword || pending}
+   >
+       {pending ?  <Spinner />  : 'Create'}
+   </Button>
+  )
+}

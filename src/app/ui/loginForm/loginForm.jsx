@@ -10,37 +10,110 @@ import { IoWarningOutline } from "react-icons/io5";
 import { redirect } from "next/navigation";
 import { useState } from "react"
 import { useFormState } from "react-dom";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import Link from "next/link"
+import { Urbanist, Manrope } from 'next/font/google'
+import { useFormStatus } from "react-dom";
+import Spinner from "../dashboard/spinner/spinner"
+
+
+const manrope = Manrope({
+  weight: ['400','500','600','700','800'],
+  style: ['normal'],
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+
 
 const LoginForm = () => {
   const { toast } = useToast();
   // const [err, setErr] = useState();
   const [state, formAction] = useFormState(authenticate, undefined);
- 
+  const [username, setUsername] = useState();
+  const [password, setPassword] = useState();
+  const [showPassword, setShowPassword] = useState(false);
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
   return (
     <div>
          <form action={formAction} className=" space-y-6 ">
-          <div className="grid items-center gap-2">
-            <Label htmlFor="username" className="text-left text-base leading-6">
+          <div className="grid relative items-center gap-2">
+            {/* <Label htmlFor="username" className={`text-left text-base leading-6 ${manrope.className}`}>
               Username
-            </Label>
-            <Input name="username" type="text" className="col-span-3 text-base" />
+            </Label> */}
+          <div className="grid relative items-center gap-2">
+            <Input name="username" type="text" className={ `col-span-3 text-sm bg-white h-12 pl-10 ${manrope.className}`} placeholder="Username" onChange={(e) => { setUsername(e.target.value)}}/>
+
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7 absolute inset-x-0 left-2  p-1">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+</svg>
+</div>
+
+
           </div>
-          <div className="grid items-center gap-2">
-            <Label htmlFor="username" className="text-left text-base leading-6">
+          <div className="grid relative items-center gap-2">
+            {/* <Label htmlFor="password" className={`text-left text-base leading-6 ${manrope.className}`}>
               Password
-            </Label>
-            <Input name="password"  type="password" className="col-span-3 text-base" />
+            </Label> */}
+            <div className="grid relative items-center  col-span-3">
+            <Input name="password"  type={showPassword ? "text" : "password"} className={ `col-span-3 text-sm h-12 bg-white px-10 ${manrope.className}`} placeholder="Password" onChange={(e) => { setPassword(e.target.value)}}/>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7 absolute inset-x-0 left-2  p-1">
+  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+</svg>
+            <button
+                    className="absolute inset-y-0 right-2 p-1 focus:outline-none"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleShowPassword();
+                    }}
+                    type="button"
+                  >
+                    {showPassword ? (
+                      <AiOutlineEyeInvisible className="text-gray-500 text-base" />
+                    ) : (
+                      <AiOutlineEye className="text-gray-500 text-base" />
+                    )}
+                  </button>
+                 
+
           </div>
-          <div class="h-5">
+
+          <div className="h-4 col-span-3 text-center text-sm text-red-500">
           {state && state}
           </div>
-          <div className="">
-            <Button type="submit" className="w-full text-base">Sign In</Button>
           </div>
-          <div class="flex flex-row justify-end mb-8"><a class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 pl-1" href="/auth/account-recovery">Forget password?</a></div>
+          <div className="">
+            {/* <Button type="submit" className={`w-full text-base ${manrope.className}`}>Sign In</Button> */}
+            <SendButton username={username} password={password}/>
+          </div>
+          <div className="flex flex-row justify-end mb-8"><Link className={`font-medium text-sm  leading-6 text-gray-800 hover:text-blue-700 pl-1 ${manrope.className}`} href="/auth/account-recovery">Forgot password?</Link></div>
           </form>
     </div>
   )
 }
 
 export default LoginForm
+
+
+
+function SendButton({ username, password,  }) {
+  const { pending } = useFormStatus();
+
+  return (
+    // <Button
+    //   type="submit"
+    //   className="font-normal min-w-32"
+    //   disabled={!name || !password || !username || pending}
+    // >
+    //   {pending ? <Spinner /> : "Create"}
+    // </Button>
+
+    <Button type="submit" className={`w-full text-base ${manrope.className} bg-gray-700`}>
+      {/* Sign In */}
+      {pending ? <Spinner /> : "Sign In"}
+      </Button>
+  
+  );
+}
